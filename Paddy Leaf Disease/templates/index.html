@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paddy Leaf Disease Identification</title>
+    <style>
+        body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(45deg, #84841d, #1b521b) fixed;
+    background-size: 100% 100%;
+    color: white;
+    
+    
+}
+
+        h1 {
+            background-color: #0d3e0d; /* Background color for the title */
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button.upload-btn {
+            margin-left: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #0d3e0d;
+            color: white;
+        }
+
+        button.upload-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Paddy Leaf Disease Identification</h1>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".jpg, .jpeg, .png" required>
+        <button type="submit" class="upload-btn">Upload</button>
+    </form>
+    {% if file_path %}
+        <img src="{{ file_path }}" alt="Uploaded Image" style="max-width: 300px; margin-top: 20px;">
+        <p>Predicted Disease: {{ predicted_class }}</p>
+    {% endif %}
+</body>
+</html>

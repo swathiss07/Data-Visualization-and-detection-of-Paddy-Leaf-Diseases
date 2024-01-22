@@ -1,0 +1,57 @@
+/* styles.css */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url('paddycrop.jpeg'); /* Replace 'path/to/your/background-image.jpg' with the actual path to your image */
+    background-size: cover;
+    background-position: center;
+    background-color: #f0f0f0; /* Set a fallback background color */
+    font-family: 'Arial', sans-serif;
+}
+
+#login-box {
+    width: 300px;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Style for email and password inputs */
+#email,
+#password {
+    width: calc(100% - 20px); /* Take padding into account */
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+#login {
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    background: #4caf50;
+    color: #fff;
+    border: none;
+}
+
+#login:hover {
+    background: #45a049;
+}
+
+/* Style for the anchor tag */
+a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+    margin-top: 10px;
+}
+
+a:hover {
+    color: rgb(77, 71, 71)0a0;
+}

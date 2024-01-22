@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paddy Leaf Diseases</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(90deg, #000 30%, #47b977 10%, #fff 70%); /* Black:Green:White ratio 3:1:7 */
+    }
+
+    h1 {
+      color: white;
+      background-color: black;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    button {
+      width: 300px; /* Increased button size */
+      padding: 20px 25px; /* Adjusted padding */
+      margin: 10px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      background-color: #2ecc71;
+      transition: background-color 0.3s;
+      color: white;
+      font-weight: bold;
+      font-family: 'Arial', sans-serif;
+      font-size: 18px; /* Slightly increased font size */
+    }
+
+    button:hover {
+      filter: brightness(1.2);
+    }
+
+    button:active {
+      transform: translateY(2px);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Paddy Leaf Diseases</h1>
+
+  <div class="button-container">
+    <button id="button1" onclick="changeColorAndNavigate('button1', 'bacterial_leaf_blight.html')">Bacterial Leaf Blight</button>
+    <button id="button3" onclick="changeColorAndNavigate('button3', 'brown_spot.html')">Brown Spot</button>
+    <button id="button5" onclick="changeColorAndNavigate('button5', 'leaf_smut.html')">Leaf Smut</button>
+    <button id="button6" onclick="changeColorAndNavigate('button6', 'other_visualization.html')">Visualisation Plots</button>
+  </div>
+
+  <!-- Your HTML content above this line -->
+
+<script>
+  function changeColorAndNavigate(buttonId, nextPage) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+      button.style.backgroundColor = getRandomColor();
+      setTimeout(function () {
+        window.location.href = nextPage;
+      }, 300); // Adjust the delay (in milliseconds) as needed
+    } else {
+      console.error('Button not found with ID:', buttonId);
+    }
+  }
+
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+</script>
+
+</body>
+</html>

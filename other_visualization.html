@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualisation Plots</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .right-part {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #2ecc71;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .content-box {
+            flex: 1;
+            padding: 20px;
+            border: 2px solid #2ecc71;
+            background-color: #fff;
+            color: #000;
+            overflow-y: auto; /* Enable scrolling if content overflows */
+        }
+    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-boxplot"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heatmap.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+</head>
+
+<body>
+    <div class="right-part">
+        <div class="button-container">
+            <button onclick="generateGeoPlot()">Geo Plot</button>
+            <button onclick="generateRadarChart()">Radar Chart</button>
+            <button onclick="generateHeatMap()">Heat Map</button>
+            <button onclick="generateBubblePlot()">Bubble Plot</button>
+            <button onclick="generateBoxPlot()">Box Plot</button>
+            <button onclick="generateHistogram()">Histogram</button>
+        </div>
+
+        <div class="content-box" id="contentBox">
+            <!-- Content from other HTML page will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        let map; // Declare map variable outside the function
+
+function generateGeoPlot() {
+    const contentBox = document.getElementById('contentBox');
+    contentBox.innerHTML = '';
+
+    if (map) {
+        map.remove(); // Remove the existing map if it exists
+    }
+
+    map = L.map(contentBox).setView([20.5937, 78.9629], 4);
+
+    // Add a tile layer (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const riceLocations = [
+        { variety: 'Basmati', region: 'Punjab', lat: 30.9010, lon: 75.8573 },
+        { variety: 'Gobindobhog', region: 'West Bengal', lat: 22.9868, lon: 87.8550 },
+        { variety: 'Rasi', region: 'Tamil Nadu', lat: 11.1271, lon: 78.6569 },
+        { variety: 'Ponni', region: 'Kerala', lat: 10.8505, lon: 76.2711 },
+        { variety: 'Tetep', region: 'Assam', lat: 26.2006, lon: 92.9376 },
+        { variety: 'Hybrid-5', region: 'Andhra Pradesh', lat: 15.9129, lon: 79.7400 },
+        { variety: 'Kalamkati', region: 'Odisha', lat: 20.9517, lon: 85.0985 },
+        { variety: 'Ratna', region: 'Uttar Pradesh', lat: 27.1304, lon: 80.8597 },
+        
+    ];
+
+    riceLocations.forEach(location => {
+        L.marker([location.lat, location.lon]).addTo(map)
+            .bindPopup(`<b>Rice Variety:</b> ${location.variety}<br><b>Region:</b> ${location.region}`);
+    });
+}
+
+function generateRadarChart() {
+    const contentBox = document.getElementById('contentBox');
+    contentBox.innerHTML = '';
+
+    const canvas = document.createElement('canvas');
+    canvas.id = 'chartCanvas';
+    contentBox.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+
+    const labels = ['Disease (2013)', 'Impact (2013)', 'Disease (2018)', 'Impact (2018)', 'Disease (2023)', 'Impact (2023)'];
+    const data = [
+        15, 5, 8, // Rice blast, Brown spot, Sheath blight (2013)
+        20, 10, 15, // Bacterial blight, Tungro virus, Blast & blight complex (2018)
+        10, 5, 7, // Sheath blight, Leaf rust, Stem rot (2023)
+    ];
+
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Rice Variety',
+                data: data,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                r: {
+                    beginAtZero: true
+                }
+            },
+            responsive: true, // Enable responsiveness
+            maintainAspectRatio: false, // Allow manual control of size
+            animation: {
+                duration: 1000, // Set the animation duration in milliseconds
+            }
+        }
+    });
+}
+function generateHeatMap() {
+    const contentBox = document.getElementById('contentBox');
+    contentBox.innerHTML = '';
+
+    const div = document.createElement('div');
+    div.id = 'chartDiv';
+    contentBox.appendChild(div);
+
+    const varieties = ['Basmati', 'Gobindobhog', 'Rasi', 'Ponni', 'Tetep', 'Hybrid-5', 'Kalamkati', 'Ratna'];
+
+    // Impact matrix for different years and varieties
+    const impactMatrix = [
+        [15, 5, 8],
+        [20, 10, 15],
+        [10, 5, 7],
+        [8, 3, 4],
+        [18, 7, 6],
+        [12, 8, 3],
+        [16, 10, 8],
+        [6, 4, 5]
+    ];
+
+    const data = [{
+        z: impactMatrix,
+        x: ['2013', '2018', '2023'],
+        y: varieties,
+        type: 'heatmap',
+        colorscale: 'Viridis'
+    }];
+
+    const layout = {
+        title: 'Heatmap of Disease Impact by Variety and Year',
+        xaxis: {
+            title: 'Year'
+        },
+        yaxis: {
+            title: 'Rice Variety',
+            automargin: true, // Automatically adjust margin to prevent label cutoff
+        },
+        height: 400, // Adjust the height of the chart container as needed
+        margin: {
+            l: 100, // Adjust the left margin to provide space for y-axis labels
+            r: 20,
+            b: 50,
+            t: 50,
+            pad: 4
+        }
+    };
+
+    Plotly.newPlot('chartDiv', data, layout);
+}
+
+function generateBubblePlot() {
+    const contentBox = document.getElementById('contentBox');
+    contentBox.innerHTML = '';
+
+    const div = document.createElement('div');
+    div.id = 'chartDiv';
+    contentBox.appendChild(div);
+
+    const data = [{
+        x: ['2013', '2018', '2023'],
+        y: [15, 10, 8],
+        mode: 'markers',
+        marker: {
+            size: [150, 100, 80],
+            color: [1, 2, 3], // Use a color scale based on a variable if needed
+            colorscale: 'Viridis'
+        },
+        type: 'scatter'
+    }];
+
+    Plotly.newPlot('chartDiv', data);
+}
+function generateBoxPlot() {
+    const contentBox = document.getElementById('contentBox');
+    contentBox.innerHTML = '';
+
+    const div = document.createElement('div');
+    div.id = 'chartDiv';
+    contentBox.appendChild(div);
+
+    const diseases = ['Rice blast', 'Brown spot', 'Sheath blight', 'Bacterial blight', 'Tungro virus', 'Blast & blight complex',
+        'Leaf rust', 'Stem rot', 'Neck blast', 'False smut', 'Gall midge', 'Bakanae disease', 'Rice gall midge'];
+
+    const impactMatrix = [
+        [15, 5, 8],
+        [20, 10, 15],
+        [10, 3, 7],
+        [8, 20, 5],
+        [18, 7, 6],
+        [12, 8, 3],
+        [16, 10, 8],
+        [6, 4, 5]
+    ];
+
+    const traces = [];
+
+    for (let i = 0; i < diseases.length; i++) {
+        traces.push({
+            y: impactMatrix[i],
+            type: 'box',
+            name: diseases[i]
+        });
+    }
+
+    const layout = {
+        title: 'Box Plot of Disease Impact',
+        yaxis: {
+            title: 'Impact'
+        }
+    };
+
+    Plotly.newPlot('chartDiv', traces, layout);
+}
+function generateHistogram() {
+    const contentBox = document.getElementById('contentBox');
+    contentBox.innerHTML = '';
+
+    const div = document.createElement('div');
+    div.id = 'chartDiv';
+    contentBox.appendChild(div);
+
+    const diseases = ['Rice blast', 'Brown spot', 'Sheath blight', 'Bacterial blight', 'Tungro virus', 'Blast & blight complex',
+        'Leaf rust', 'Stem rot', 'Neck blast', 'False smut', 'Gall midge', 'Bakanae disease', 'Rice gall midge'];
+
+    // Impact matrix for different variables and diseases
+    const impactMatrix = [
+        [15, 5, 8, 12, 20, 10, 15, 8, 10, 5, 7, 16, 6],
+        [10, 15, 5, 18, 7, 6, 12, 8, 3, 7, 6, 10, 4],
+        [8, 20, 10, 3, 15, 8, 7, 5, 5, 12, 8, 8, 5]
+    ];
+
+    const data = [];
+
+    for (let i = 0; i < diseases.length; i++) {
+        data.push({
+            x: impactMatrix[i],
+            type: 'histogram',
+            name: diseases[i],
+            opacity: 0.7
+        });
+    }
+
+    const layout = {
+        barmode: 'overlay',
+        title: 'Histogram of Disease Impact by Variable',
+        xaxis: {
+            title: 'Impact'
+        },
+        yaxis: {
+            title: 'Frequency'
+        }
+    };
+
+    Plotly.newPlot('chartDiv', data, layout);
+}
+
+    </script>
+</body>
+
+</html>

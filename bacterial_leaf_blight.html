@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bacterial Leaf Blight</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .left-part {
+            flex: 2;
+            background-color: #000;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            overflow-y: auto; /* Enable scrolling if content overflows */
+        }
+
+        .left-part img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+        }
+
+        .right-part {
+            flex: 8;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #2ecc71;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .content-box {
+            flex: 1;
+            padding: 20px;
+            border: 2px solid #2ecc71;
+            background-color: #fff;
+            color: #000;
+            overflow-y: auto; /* Enable scrolling if content overflows */
+        }
+    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-boxplot"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.js"></script>
+
+</head>
+
+<body>
+
+    <div class="left-part">
+        <h1>Bacterial Leaf Blight</h1>
+        <img src="bacterial_leaf.jpg" alt="Image">
+        <h2>Features:</h2>
+        <h4>Water-soaked lesions on leaves</h4>
+        <h4>Turning yellow to brown</h4>
+        <h4>Later drying up</h4>
+    </div>
+
+    <div class="right-part">
+        <div class="button-container">
+            <button onclick="generateBarChart()">Bar Chart</button>
+            <button onclick="generateScatterPlot()">Scatter Plot</button>
+            <button onclick="generateLineChart()">Line Chart</button>
+            <button onclick="generatePieChart()">Pie Chart</button>
+            <button onclick="generateBoxPlot()">Box Plot</button>
+        </div>
+
+        <div class="content-box" id="contentBox">
+            <!-- Content from other HTML page will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        const dataset = [
+            { ID: 1, Location: "Punjab", Temperature: 28, Humidity: 80, 'Ph Level': 6.5, 'Leaf Color': "Yellow", 'Lesion Length': 3, 'Lesion Width': 1, 'Lesion Shape': "Oval", 'Spore Count': 100, 'Infected Area': 30 },
+            { ID: 2, Location: "West Bengal", Temperature: 30, Humidity: 75, 'Ph Level': 6.2, 'Leaf Color': "Green", 'Lesion Length': 4, 'Lesion Width': 1.5, 'Lesion Shape': "Circular", 'Spore Count': 120, 'Infected Area': 35 },
+            { ID: 3, Location: "Tamil Nadu", Temperature: 25, Humidity: 85, 'Ph Level': 6.8, 'Leaf Color': "Yellow", 'Lesion Length': 2.5, 'Lesion Width': 0.8, 'Lesion Shape': "Oval", 'Spore Count': 80, 'Infected Area': 25 },
+            { ID: 4, Location: "Kerala", Temperature: 27, Humidity: 78, 'Ph Level': 6.0, 'Leaf Color': "Green", 'Lesion Length': 3.5, 'Lesion Width': 1.2, 'Lesion Shape': "Circular", 'Spore Count': 110, 'Infected Area': 32 },
+            { ID: 5, Location: "Assam", Temperature: 29, Humidity: 82, 'Ph Level': 6.3, 'Leaf Color': "Yellow", 'Lesion Length': 3, 'Lesion Width': 1, 'Lesion Shape': "Oval", 'Spore Count': 95, 'Infected Area': 28 },
+            { ID: 6, Location: "Andhra Pradesh", Temperature: 26, Humidity: 79, 'Ph Level': 6.7, 'Leaf Color': "Green", 'Lesion Length': 2, 'Lesion Width': 0.5, 'Lesion Shape': "Circular", 'Spore Count': 85, 'Infected Area': 22 },
+            { ID: 7, Location: "Odisha", Temperature: 31, Humidity: 77, 'Ph Level': 6.1, 'Leaf Color': "Yellow", 'Lesion Length': 4.5, 'Lesion Width': 1.8, 'Lesion Shape': "Oval", 'Spore Count': 130, 'Infected Area': 40 },
+            { ID: 8, Location: "Uttar Pradesh", Temperature: 28, Humidity: 83, 'Ph Level': 6.6, 'Leaf Color': "Green", 'Lesion Length': 3, 'Lesion Width': 1.2, 'Lesion Shape': "Circular", 'Spore Count': 105, 'Infected Area': 34 },
+            { ID: 9, Location: "Bihar", Temperature: 24, Humidity: 76, 'Ph Level': 6.4, 'Leaf Color': "Yellow", 'Lesion Length': 2.8, 'Lesion Width': 0.9, 'Lesion Shape': "Oval", 'Spore Count': 75, 'Infected Area': 23 },
+            { ID: 10, Location: "Karnataka", Temperature: 32, Humidity: 81, 'Ph Level': 6.9, 'Leaf Color': "Green", 'Lesion Length': 4, 'Lesion Width': 1.5, 'Lesion Shape': "Circular", 'Spore Count': 125, 'Infected Area': 38 }
+        ];
+
+        function generateBarChart() {
+            const contentBox = document.getElementById('contentBox');
+            contentBox.innerHTML = '';
+
+            const canvas = document.createElement("canvas");
+            canvas.id = "chartCanvas";
+            contentBox.appendChild(canvas);
+
+            const ctx = canvas.getContext('2d');
+
+            const labels = dataset.map(data => data.Location); // Use 'Location' for labels
+            const pHData = dataset.map(data => data['Ph Level']);
+            const humidityData = dataset.map(data => data.Humidity);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'pH Level',
+                        data: pHData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Humidity',
+                        data: humidityData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2
+                    }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Bar Chart of pH Level and Humidity'
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+        function generateScatterPlot() {
+            const contentBox = document.getElementById('contentBox');
+            contentBox.innerHTML = '';
+
+            const div = document.createElement("div");
+            div.id = "chartDiv";
+            contentBox.appendChild(div);
+
+            const temperatureData = dataset.map(data => data.Temperature);
+            const humidityData = dataset.map(data => data.Humidity);
+
+            const trace1 = {
+                x: temperatureData,
+                y: humidityData,
+                mode: 'markers',
+                type: 'scatter',
+                marker: {
+                    color: 'rgba(255, 99, 132, 0.5)',
+                    size: 10
+                }
+            };
+
+            const layout = {
+                title: 'Scatter Plot of Temperature and Humidity',
+                xaxis: {
+                    title: 'Temperature'
+                },
+                yaxis: {
+                    title: 'Humidity'
+                }
+            };
+
+            Plotly.newPlot('chartDiv', [trace1], layout);
+        }
+
+        function generateLineChart() {
+    const contentBox = document.getElementById('contentBox');
+    contentBox.innerHTML = '';
+
+    const canvas = document.createElement("canvas");
+    canvas.id = "chartCanvas";
+    contentBox.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+
+    const labels = dataset.map(data => data.Location); // Use 'Location' for labels
+    const humidityData = dataset.map(data => data.Humidity);
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Humidity',
+                data: humidityData,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Line Chart of Humidity'
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+function generatePieChart() {
+    const contentBox = document.getElementById('contentBox');
+    contentBox.innerHTML = '';
+
+    const canvas = document.createElement("canvas");
+    canvas.id = "chartCanvas";
+    contentBox.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+
+    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50', '#FF8C00', '#9966FF', '#00FFFF', '#8A2BE2', '#FF1493', '#00FF00'];
+    const sporeCountData = dataset.map(data => data['Spore Count']);
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: dataset.map(data => data.Location), // Use 'Location' for labels
+            datasets: [{
+                data: sporeCountData,
+                backgroundColor: colors,
+                borderColor: 'rgba(255, 255, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Pie Chart of Spore Count'
+            },
+            aspectRatio: 1,
+            maintainAspectRatio: false,
+        }
+    });
+
+    // Adjust the canvas style to move it upwards
+    canvas.style.position = 'relative';
+    canvas.style.top = '-20px'; // Adjust this value to move the chart up or down
+}
+        function generateBoxPlot() {
+            const contentBox = document.getElementById('contentBox');
+            contentBox.innerHTML = '';
+
+            const div = document.createElement("div");
+            div.id = "chartDiv";
+            contentBox.appendChild(div);
+
+            const sporeCountData = dataset.map(data => data['Spore Count']);
+
+            const trace1 = {
+                y: sporeCountData,
+                type: 'box'
+            };
+
+            const layout = {
+                title: 'Box Plot of Spore Count',
+                yaxis: {
+                    title: 'Spore Count'
+                }
+            };
+
+            Plotly.newPlot('chartDiv', [trace1], layout);
+        }
+    </script>
+
+</body>
+
+</html>

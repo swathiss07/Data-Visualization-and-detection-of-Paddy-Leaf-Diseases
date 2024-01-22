@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rice Leaf Diseases Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .nav {
+            background-color: #4caf50; /* Set to black */
+            display: flex;
+            justify-content: space-around;
+            padding: 8px; /* Smaller padding */
+        }
+
+        .nav button {
+            background-color: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .imageContainer {
+            display: flex;
+            flex-direction: row;
+            width: 80%;
+            margin: auto;
+            padding: 10px; /* Reduced padding */
+            justify-content: space-between;
+        }
+
+        .imageContainerItem {
+            display: flex;
+            align-items: stretch;
+            width: 100%;
+            margin-bottom: 10px; /* Reduced space */
+        }
+
+        .image {
+            max-width: 100%;
+            height: auto;
+            max-height: 120px;
+            border-radius: 10px 0 0 10px;
+        }
+
+        .textContainer {
+            flex-grow: 1;
+            background-color: #d5dba5;
+            border-radius: 0 10px 10px 0;
+            padding: 10px; /* Reduced padding */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .text {
+            margin-bottom: 10px; /* Reduced space */
+            text-align: justify; /* Set text alignment to justify */
+            font-family: 'Arial', sans-serif; /* Add your preferred font-family */
+        }
+
+        #predictButton,
+        #visualizeButton {
+            margin-right: 10px; /* Reduced space */
+        }
+
+        #logoutButton {
+            background-color: red;
+            color: white;
+            font-size: 16px;
+            padding: 8px 12px; /* Reduced padding */
+            border-radius: 10px;
+            margin-left: auto;
+        }
+
+        .nav button:hover {
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Rice Leaf Diseases Prediction</h1>
+    </div>
+    <div class="nav">
+        <button id="predictButton">Predict</button>
+        <button id="visualizeButton">Visualize</button>
+        <button id="precautionButton">Precaution</button>
+        <button id="logoutButton">Logout</button>
+    </div>
+    <div class="imageContainer">
+        <div class="imageContainerItem">
+            <img class="image" src="bacterial_leaf.jpg" alt="Image 1">
+            <div class="textContainer">
+                <div class="text">Bacterial Leaf Blight is a common and destructive disease that affects paddy (rice) plants. It is caused by the bacterium Xanthomonas oryzae pv. oryzae. The disease primarily manifests as water-soaked lesions with a yellow halo on the leaves. As it progresses, the lesions expand and coalesce, leading to wilting and drying of the affected areas. This disease is spread through infected seeds, water, and wind-driven rain, facilitating its rapid transmission in paddy fields. </div>
+            </div>
+        </div>
+    </div>
+    <div class="imageContainer">
+        <div class="imageContainerItem">
+            <img class="image" src="brownspot.jpg" alt="Image 2">
+            <div class="textContainer">
+                <div class="text">Brown spot is caused by the fungus Bipolaris oryzae. The disease is characterized by the presence of small, oval to elliptical lesions with brown centers and yellow halos on the leaves. These lesions can coalesce, leading to large necrotic areas and, in severe cases, can result in the drying of affected leaves. Brown spot is favored by warm and humid conditions, and its severity is often influenced by factors such as excessive nitrogen fertilizer, dense planting, and leaf wetness.</div>
+            </div>
+        </div>
+    </div>
+    <div class="imageContainer">
+        <div class="imageContainerItem">
+            <img class="image" src="leafsmut.jpg" alt="Image 3">
+            <div class="textContainer">
+                <div class="text">Leaf smut, also known as false smut or green smut, is a disease that affects various cereal crops, including paddy. The causal agent of leaf smut is the fungus Pyricularia oryzae. Unlike the true smuts that infect the grains and early symptoms of leaf smut include the appearance of small, water-soaked lesions on the leaves. Leaf smut can lead to reduced photosynthetic activity in affected leaves, impacting the overall growth and yield of the rice plant.</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('predictButton').addEventListener('click', function() {
+            // Redirect to the upload.html page
+            window.location.href = 'http://127.0.0.1:5000';
+        });
+
+        document.getElementById('visualizeButton').addEventListener('click', function() {
+            // Redirect to the login.html page
+            window.location.href = 'diseases.html';
+        });
+
+        document.getElementById('precautionButton').addEventListener('click', function() {
+            // Redirect to the precautions.html page
+            window.location.href = 'precautions.html';
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            // Redirect to the preview.html page
+            window.location.href = 'login.html';
+            alert('Logging Out!!');
+        });
+    </script>
+</body>
+</html>

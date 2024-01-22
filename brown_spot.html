@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brown Spot Disease</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .left-part {
+            flex: 2;
+            background-color: #000;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            overflow-y: auto; /* Enable scrolling if content overflows */
+        }
+
+        .left-part img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+        }
+
+        .right-part {
+            flex: 8;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #2ecc71;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .content-box {
+            flex: 1;
+            padding: 20px;
+            border: 2px solid #2ecc71;
+            background-color: #fff;
+            color: #000;
+            overflow-y: auto; /* Enable scrolling if content overflows */
+        }
+    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-boxplot"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.js"></script>
+</head>
+
+<body>
+
+    <div class="left-part">
+        <h1>Brown Spot Disease</h1>
+        <img src="brownspot.jpg" alt="Image">
+        <h2>Features:</h2>
+        <ul>
+            <h3>Small, round, brown lesions on leaves</h3>
+            <h3>Later coalescing into larger patches</h3>
+        </ul>
+    </div>
+
+    <div class="right-part">
+        <div class="button-container">
+            <button onclick="generateBarChart()">Bar Chart</button>
+            <button onclick="generateScatterPlot()">Scatter Plot</button>
+            <button onclick="generateLineChart()">Line Chart</button>
+            <button onclick="generatePieChart()">Pie Chart</button>
+            <button onclick="generateBoxPlot()">Box Plot</button>
+        </div>
+
+        <div class="content-box" id="contentBox">
+            <!-- Content from other HTML page will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        const dataset = [
+            { Location: "Andhra Pradesh", Lesion_Length_mm: 10, Lesion_Width_mm: 1, Lesion_Color: "Brown", Leaf_Discoloration: "Yes", Presence_of_Spots: "Yes", Spore_Production: "Low", Leaf_Curling: "No", Necrotic_Areas: "Yes", Yellowing: "No", Stem_Discoloration: "Yes" },
+            { Location: "Punjab", Lesion_Length_mm: 8, Lesion_Width_mm: 0.5, Lesion_Color: "Dark brown", Leaf_Discoloration: "Yes", Presence_of_Spots: "Yes", Spore_Production: "Low", Leaf_Curling: "No", Necrotic_Areas: "Yes", Yellowing: "No", Stem_Discoloration: "No" },
+            { Location: "West Bengal", Lesion_Length_mm: 15, Lesion_Width_mm: 2, Lesion_Color: "Brown", Leaf_Discoloration: "Yes", Presence_of_Spots: "Yes", Spore_Production: "Medium", Leaf_Curling: "Yes", Necrotic_Areas: "Yes", Yellowing: "Yes", Stem_Discoloration: "No" },
+            { Location: "Odisha", Lesion_Length_mm: 12, Lesion_Width_mm: 1.5, Lesion_Color: "Light brown", Leaf_Discoloration: "Yes", Presence_of_Spots: "Yes", Spore_Production: "Low", Leaf_Curling: "Yes", Necrotic_Areas: "No", Yellowing: "No", Stem_Discoloration: "No" },
+            { Location: "Uttar Pradesh", Lesion_Length_mm: 18, Lesion_Width_mm: 2.5, Lesion_Color: "Brown", Leaf_Discoloration: "Yes", Presence_of_Spots: "Yes", Spore_Production: "High", Leaf_Curling: "Yes", Necrotic_Areas: "Yes", Yellowing: "Yes", Stem_Discoloration: "Yes" },
+            { Location: "Bihar", Lesion_Length_mm: 7, Lesion_Width_mm: 0.8, Lesion_Color: "Dark brown", Leaf_Discoloration: "Yes", Presence_of_Spots: "Yes", Spore_Production: "Low", Leaf_Curling: "No", Necrotic_Areas: "Yes", Yellowing: "No", Stem_Discoloration: "No" },
+            { Location: "Chhattisgarh", Lesion_Length_mm: 20, Lesion_Width_mm: 3, Lesion_Color: "Brown", Leaf_Discoloration: "Yes", Presence_of_Spots: "Yes", Spore_Production: "High", Leaf_Curling: "Yes", Necrotic_Areas: "Yes", Yellowing: "Yes", Stem_Discoloration: "Yes" },
+            { Location: "Kerala", Lesion_Length_mm: 14, Lesion_Width_mm: 2, Lesion_Color: "Light brown", Leaf_Discoloration: "Yes", Presence_of_Spots: "Yes", Spore_Production: "Medium", Leaf_Curling: "Yes", Necrotic_Areas: "No", Yellowing: "No", Stem_Discoloration: "Yes" }
+        ];
+
+        function sporeProductionToNumber(sporeProduction) {
+            switch (sporeProduction.toLowerCase()) {
+                case 'low':
+                    return 1;
+                case 'medium':
+                    return 2;
+                case 'high':
+                    return 3;
+                default:
+                    return 0;
+            }
+        }
+
+        function generateBarChart() {
+    const contentBox = document.getElementById('contentBox');
+    contentBox.innerHTML = '';
+
+    const canvas = document.createElement("canvas");
+    canvas.id = "chartCanvas";
+    contentBox.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+
+    const labels = dataset.map(data => data.Location); // Use 'Location' for labels
+    const lesionLengthData = dataset.map(data => data.Lesion_Length_mm);
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Lesion Length (mm)',
+                data: lesionLengthData,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Bar Chart of Lesion Length'
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+
+        function generateScatterPlot() {
+            const contentBox = document.getElementById('contentBox');
+            contentBox.innerHTML = '';
+
+            const div = document.createElement("div");
+            div.id = "chartDiv";
+            contentBox.appendChild(div);
+
+            const lesionLengthData = dataset.map(data => data.Lesion_Length_mm);
+            const sporeProductionData = dataset.map(data => sporeProductionToNumber(data.Spore_Production));
+
+            const trace1 = {
+                x: lesionLengthData,
+                y: sporeProductionData,
+                mode: 'markers',
+                type: 'scatter',
+                marker: {
+                    color: 'rgba(255, 99, 132, 0.5)',
+                    size: 10
+                }
+            };
+
+            const layout = {
+                title: 'Scatter Plot of Lesion Length and Spore Production',
+                xaxis: {
+                    title: 'Lesion Length (mm)'
+                },
+                yaxis: {
+                    title: 'Spore Production (Numeric)'
+                }
+            };
+
+            Plotly.newPlot('chartDiv', [trace1], layout);
+        }
+
+        
+
+        function generateLineChart() {
+    const contentBox = document.getElementById('contentBox');
+    contentBox.innerHTML = '';
+
+    const canvas = document.createElement("canvas");
+    canvas.id = "chartCanvas";
+    contentBox.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+
+    const labels = dataset.map(data => data.Location); // Use 'Location' for labels
+    const lesionLengthData = dataset.map(data => data.Lesion_Length_mm);
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Lesion Length (mm)',
+                data: lesionLengthData,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Line Chart of Lesion Length'
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+function generatePieChart() {
+    const contentBox = document.getElementById('contentBox');
+    contentBox.innerHTML = '';
+
+    const canvas = document.createElement("canvas");
+    canvas.id = "chartCanvas";
+    contentBox.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+
+    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50', '#FF8C00', '#9966FF', '#00FFFF', '#8A2BE2', '#FF1493', '#00FF00'];
+    const sporeProductionData = dataset.map(data => sporeProductionToNumber(data.Spore_Production));
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: dataset.map(data => data.Location), // Use 'Location' for labels
+            datasets: [{
+                data: sporeProductionData,
+                backgroundColor: colors,
+                borderColor: 'rgba(255, 255, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Pie Chart of Spore Production'
+            },
+            aspectRatio: 1,
+            maintainAspectRatio: false,
+        }
+    });
+
+    // Adjust the canvas style to move it upwards
+    canvas.style.position = 'relative';
+    canvas.style.top = '-20px'; // Adjust this value to move the chart up or down
+}
+        function generateBoxPlot() {
+            const contentBox = document.getElementById('contentBox');
+            contentBox.innerHTML = '';
+
+            const div = document.createElement("div");
+            div.id = "chartDiv";
+            contentBox.appendChild(div);
+
+            const sporeProductionData = dataset.map(data => sporeProductionToNumber(data.Spore_Production));
+
+            const trace1 = {
+                y: sporeProductionData,
+                type: 'box'
+            };
+
+            const layout = {
+                title: 'Box Plot of Spore Production',
+                yaxis: {
+                    title: 'Spore Production (Numeric)'
+                }
+            };
+
+            Plotly.newPlot('chartDiv', [trace1], layout);
+        }
+    </script>
+
+</body>
+
+</html>
